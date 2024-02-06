@@ -1,14 +1,16 @@
 package com.sandun.web.panel;
 
+import com.sandun.web.entities.enums.UserType;
 import com.sandun.web.model.ChatManager;
 import com.sandun.web.model.ChatOpenChecker;
 import com.sandun.web.model.ClickEffectManager;
 import com.sandun.web.model.FontManager;
 import com.sandun.web.model.MessageListener;
+import com.sandun.web.model.SessionManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.ImageIcon;
-
+import org.hibernate.Session;
 
 public class Home extends javax.swing.JPanel {
 
@@ -25,6 +27,9 @@ public class Home extends javax.swing.JPanel {
     private void setUp() {
         FontManager.setFontForLable(FontManager.outfitMedium, 24f, jLabel2);
         System.out.println(homeMenuItem1.getBackground());
+        if (SessionManager.getUSER().getType() == UserType.CUSTOMER) {
+            homeMenuItem1.setVisible(false);
+        }
     }
 
     @SuppressWarnings("unchecked")

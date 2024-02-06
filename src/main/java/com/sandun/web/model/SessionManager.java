@@ -5,15 +5,16 @@ import com.sandun.web.service.UserService;
 
 public class SessionManager {
 
-    private static final User USER = getUser();
+    private static User user;
 
-    private static User getUser() {
+    public static User logIn(String username, String password) {
         UserService us = new UserService();
-        return us.getUserById(2);
+        user = us.logIn(username, password);
+        return user;
     }
 
     public static User getUSER() {
-        return USER;
+        return user;
     }
 
 }

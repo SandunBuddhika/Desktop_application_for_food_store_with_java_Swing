@@ -27,6 +27,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import com.sandun.web.service.FoodService;
 import com.sandun.web.service.InvoiceService;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OrderFood extends javax.swing.JPanel {
 
@@ -36,11 +38,13 @@ public class OrderFood extends javax.swing.JPanel {
     private DefaultTableModel dtm;
     private InvoiceService invoiceService;
     private ClickEffectManager cem;
+    private Map<Long, ExtraIngredientDTO> customCommands;
 
     public OrderFood() {
         cem = new ClickEffectManager(new Color(204, 204, 204), new Color(150, 150, 150));
         initComponents();
         foodService = new FoodService();
+        customCommands = new HashMap();
         order = new ArrayList<>();
         invoiceService = new InvoiceService();
         dtm = (DefaultTableModel) jTable1.getModel();
@@ -448,10 +452,22 @@ public class OrderFood extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void customCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_customCodeKeyPressed
-        if (evt.getKeyCode() == 10) {
+        if (evt.getKeyCode() == 10 && currentFood != null) {
             CustomExtraIngredient customExpression = new CustomExtraIngredient(customCode.getText());
-            AddExtraIngredient addIngredientNonExpression = new AddExtraIngredient(this, customExpression, currentFood);
+            AddExtraIngredient addIngredientNonExpression = new AddExtraIngredient(this, customExpression, customCommands);
             addIngredientNonExpression.interpret();
+            customCode.setText("");
+            calculateSubTotal();
+            for (Component c : jPanel6.getComponents()) {
+                if (c instanceof AdditionalIngredient) {
+                    AdditionalIngredient a = (AdditionalIngredient) c;
+                    ExtraIngredientDTO xe = customCommands.get(a.getExtraIngredentDTO().getId());
+                    if (xe != null) {
+                        a.changeState(true);
+                    }
+                    customCommands.remove(a.getExtraIngredentDTO().getId());
+                }
+            }
         }
     }//GEN-LAST:event_customCodeKeyPressed
 
@@ -472,7 +488,7 @@ public class OrderFood extends javax.swing.JPanel {
     public void addToTable() {
         double total = 0;
         String extra = "";
-        currentFood.setExtraIngredients(new ArrayList<>());
+        currentFood.setExtraIngredients(new HashMap<>());
         for (Component c : jPanel6.getComponents()) {
             if (c instanceof AdditionalIngredient) {
                 AdditionalIngredient a = (AdditionalIngredient) c;
@@ -480,8 +496,22 @@ public class OrderFood extends javax.swing.JPanel {
                     ExtraIngredientDTO ei = a.getExtraIngredentDTO();
                     total += ei.getPrice();
                     extra += ei.getName() + ", ";
-                    currentFood.addExtraIngredients(ei);
+                    currentFood.addExtraIngredients(ei.getId(), ei);
                 }
+            }
+        }
+        for (Map.Entry<Long, ExtraIngredientDTO> customXI : customCommands.entrySet()) {
+            String[] ex = extra.replaceAll(" ", "").split(",");
+            boolean isFound = false;
+            for (String s : ex) {
+                if (s.equals(customXI.getValue().getName())) {
+                    isFound = true;
+                    break;
+                }
+            }
+            if (!isFound) {
+                extra += customXI.getValue().getName() + ", ";
+                total += customXI.getValue().getPrice();
             }
         }
         FoodDTO f = currentFood.build();
@@ -500,6 +530,7 @@ public class OrderFood extends javax.swing.JPanel {
         dtm.addRow(v);
         calculateTotal();
         jLabel8.setText("LKR 0.00");
+        customCommands.clear();
         resetSelected();
     }
 

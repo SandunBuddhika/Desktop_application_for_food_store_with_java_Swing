@@ -65,10 +65,10 @@ public class FoodDTO {
         private double price;
         private int qty;
         private String description;
-        private List<ExtraIngredientDTO> extraIngredients;
+        private Map<Long, ExtraIngredientDTO> extraIngredients;
 
         public Builder() {
-            extraIngredients = new ArrayList<>();
+            extraIngredients = new HashMap<>();
         }
 
         public Builder(Food f) {
@@ -79,9 +79,9 @@ public class FoodDTO {
             this.description = f.getDescription();
             Set<ExtraIngredient> listE = f.getIngredients();
             if (listE != null && !listE.isEmpty()) {
-                extraIngredients = new ArrayList<>();
+                extraIngredients = new HashMap<>();
                 for (ExtraIngredient e : listE) {
-                    extraIngredients.add(new ExtraIngredientDTO.Builder().setId(e.getId()).setName(e.getName()).setPrice(e.getPrice()).build());
+                    extraIngredients.put(e.getId(), new ExtraIngredientDTO.Builder().setId(e.getId()).setName(e.getName()).setPrice(e.getPrice()).build());
                 }
             }
         }
@@ -116,13 +116,13 @@ public class FoodDTO {
             return this;
         }
 
-        public Builder setExtraIngredients(List<ExtraIngredientDTO> extraIngredients) {
+        public Builder setExtraIngredients(Map<Long, ExtraIngredientDTO> extraIngredients) {
             this.extraIngredients = extraIngredients;
             return this;
         }
 
-        public Builder addExtraIngredients(ExtraIngredientDTO extraIngredient) {
-            this.extraIngredients.add(extraIngredient);
+        public Builder addExtraIngredients(long id, ExtraIngredientDTO extraIngredient) {
+            this.extraIngredients.put(id, extraIngredient);
             return this;
         }
 
@@ -130,7 +130,7 @@ public class FoodDTO {
             String key = this.toString();
             FoodDTO dto = FOOD_POOL.get(key);
             if (dto == null) {
-                dto = new FoodDTO(id, name, path, price, qty, description, extraIngredients);
+                dto = new FoodDTO(id, name, path, price, qty, description, new ArrayList<>(extraIngredients.values()));
                 FOOD_POOL.put(key, dto);
             }
             return dto;

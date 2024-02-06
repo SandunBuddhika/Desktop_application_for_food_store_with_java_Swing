@@ -42,6 +42,10 @@ public class AdditionalIngredient extends javax.swing.JPanel {
         return myPanelRound1;
     }
 
+    public void changeState(boolean b) {
+        jRadioButton1.setSelected(b);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

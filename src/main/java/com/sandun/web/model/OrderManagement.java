@@ -18,7 +18,9 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -124,9 +126,9 @@ public class OrderManagement {
             List<FoodDTO> fList = new ArrayList<>();
             for (InvoiceItem iItem : o.getOrder().getItems()) {
                 Food f = iItem.getFood();
-                List<ExtraIngredientDTO> extraIngredients = new ArrayList<>();
+                Map<Long, ExtraIngredientDTO> extraIngredients = new HashMap<>();
                 for (ExtraIngredient xi : iItem.getInvoiceIngredients()) {
-                    extraIngredients.add(new ExtraIngredientDTO.Builder().setId(xi.getId()).setName(xi.getName()).setPrice(xi.getPrice()).build());
+                    extraIngredients.put(xi.getId(), new ExtraIngredientDTO.Builder().setId(xi.getId()).setName(xi.getName()).setPrice(xi.getPrice()).build());
                 }
                 FoodDTO dto = new FoodDTO.Builder().setDescription(f.getDescription()).setPath(f.getImg()).setId(f.getId()).setPrice(f.getPrice()).setQty(iItem.getQty()).setName(f.getName()).setExtraIngredients(extraIngredients).build();
                 fList.add(dto);

@@ -100,16 +100,18 @@ public class ChatManager {
             }
             MessageTemplate mt = new MessageTemplate(m.getMessage());
             int w = 10 + (m.getMessage().length() * 13);
-            int h = 50 + (13 * Math.round((w / 350)));
+            int h = (12 * Math.round((w / 350)));
             if (w > 350) {
                 w = 350;
             }
-            if (h > 50) {
-                h -= 40;
+            System.out.println(h);
+            if (h < 70) {
+                h = 50;
             }
             if (w < 138) {
                 w = 138;
             }
+
             mc.setPreferredSize(new Dimension(755, h + 10));
             mc.setMaximumSize(new Dimension(755, h + 10));
             mc.setSize(new Dimension(755, h + 10));

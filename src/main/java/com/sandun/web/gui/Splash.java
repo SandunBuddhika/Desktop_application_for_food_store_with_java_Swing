@@ -4,6 +4,7 @@ import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.sandun.web.panel.Home;
+import com.sandun.web.panel.LogIn;
 import java.awt.BorderLayout;
 
 public class Splash extends javax.swing.JFrame {
@@ -80,10 +81,10 @@ public class Splash extends javax.swing.JFrame {
                 Splash s = new Splash();
                 s.setVisible(true);
                 new Thread(() -> {
-                    Home home = new Home();
+                    LogIn logIn = new LogIn();
                     s.mainPanel.removeAll();
                     s.mainPanel.setLayout(new BorderLayout());
-                    s.mainPanel.add(home);
+                    s.mainPanel.add(logIn);
                     s.mainPanel.repaint();
                     s.mainPanel.revalidate();
                 }).start();

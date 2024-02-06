@@ -5,13 +5,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "logIn", query = "select u from User u where u.username=:uUsername and u.password=:uPassword"),
+    @NamedQuery(name = "logInByUsername", query = "select u from User u where u.username=:uUsername and u.type=1"),
+})
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -81,7 +86,6 @@ public class User {
     public void setInvoices(List<Invoice> invoices) {
         this.invoices = invoices;
     }
-
 
     public List<OrderManager> getOrderHandlers() {
         return orderHandlers;
