@@ -140,7 +140,6 @@ public class FoodDTO {
         public String toString() {
             return "Builder{" + "name=" + name + ", path=" + path + ", price=" + price + ", qty=" + qty + ", description=" + description + ", extraIngredients=" + extraIngredients + '}';
         }
-
     }
 
     @Override

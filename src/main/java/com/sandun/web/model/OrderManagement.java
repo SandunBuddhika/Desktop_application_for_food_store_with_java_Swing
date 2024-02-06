@@ -33,12 +33,12 @@ public class OrderManagement {
     private final ClickEffectManager cem;
     private final OrderService orderService;
     private OrderManagerDTO currectOrder;
-    private final com.sandun.web.panel.OrderManagement orderManagement;
+    private final com.sandun.web.panel.OrderManagement ORDER_MANAGEMENT;
     private DefaultTableModel dtm;
 
     public OrderManagement(com.sandun.web.panel.OrderManagement orderManagement) {
         this.orderService = new OrderService();
-        this.orderManagement = orderManagement;
+        this.ORDER_MANAGEMENT = orderManagement;
         this.invoiceService = new InvoiceService();
         this.cem = new ClickEffectManager(new Color(204, 204, 204), new Color(153, 153, 153));
         dtm = (DefaultTableModel) orderManagement.jTable1.getModel();
@@ -46,11 +46,11 @@ public class OrderManagement {
 
     public void takeTheOrder(long invoiceId) {
         orderService.takeTheOrder(invoiceId);
-        JOptionPane.showMessageDialog(orderManagement, "You Took the order No: " + invoiceId + ".", "INFO", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(ORDER_MANAGEMENT, "You Took the order No: " + invoiceId + ".", "INFO", JOptionPane.INFORMATION_MESSAGE);
+        reset();
         loadOrders();
         loadHandilingOrders();
         loadOrderHistory();
-        reset();
         currectOrder = null;
     }
 
@@ -62,10 +62,10 @@ public class OrderManagement {
             handler1.setNextHandler(handler2);
             handler2.setNextHandler(handler3);
             handler1.handle(this);
+            reset();
             loadOrders();
             loadHandilingOrders();
             loadOrderHistory();
-            reset();
             currectOrder = null;
         } else {
             valitateErrorMessage();
@@ -73,7 +73,7 @@ public class OrderManagement {
     }
 
     private void valitateErrorMessage() {
-        JOptionPane.showMessageDialog(orderManagement, "Please select a order first", "WARNING", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(ORDER_MANAGEMENT, "Please select a order first", "WARNING", JOptionPane.WARNING_MESSAGE);
     }
 
     public OrderManagerDTO getCurrectOrder() {
@@ -85,19 +85,19 @@ public class OrderManagement {
     }
 
     public com.sandun.web.panel.OrderManagement getOrderManagement() {
-        return orderManagement;
+        return ORDER_MANAGEMENT;
     }
 
     public void loadOrders() {
         List<Invoice> invoices = invoiceService.getAllInvoice();
-        orderManagement.jPanel1.removeAll();
+        ORDER_MANAGEMENT.jPanel1.removeAll();
         for (Invoice i : invoices) {
             if (i.getHandler() == null) {
                 String name = i.getId() + " : ";
                 for (InvoiceItem ii : i.getItems()) {
                     name += " " + ii.getFood().getName() + ",";
                 }
-                com.sandun.web.panel.OrderManagement om = orderManagement;
+                com.sandun.web.panel.OrderManagement om = ORDER_MANAGEMENT;
                 ChatOrderItem item = new ChatOrderItem(name.substring(0, name.length() - 1), i.getId(), cem);
                 item.getMyPanelRound4().addMouseListener(new MouseAdapter() {
                     @Override
@@ -109,17 +109,17 @@ public class OrderManagement {
                         }
                     }
                 });
-                orderManagement.jPanel1.add(item);
-                orderManagement.jPanel1.add(Box.createVerticalStrut(5));
+                ORDER_MANAGEMENT.jPanel1.add(item);
+                ORDER_MANAGEMENT.jPanel1.add(Box.createVerticalStrut(5));
             }
         }
-        orderManagement.jPanel1.revalidate();
-        orderManagement.jPanel1.repaint();
+        ORDER_MANAGEMENT.jPanel1.revalidate();
+        ORDER_MANAGEMENT.jPanel1.repaint();
     }
 
     public void loadHandilingOrders() {
         List<OrderManager> orders = orderService.getAllOrder();
-        orderManagement.preparing_container.removeAll();
+        ORDER_MANAGEMENT.preparing_container.removeAll();
         ClickEffectManager handilingOrdersCem = new ClickEffectManager(new Color(204, 204, 204), new Color(153, 153, 153));
         for (OrderManager o : orders) {
             if (o.getState() == OrderState.PREPARING) {
@@ -136,11 +136,9 @@ public class OrderManagement {
                 }
                 b.setFood(fList);
                 OrderItem item = new OrderItem(b.build(), handilingOrdersCem);
-                orderManagement.preparing_container.add(item);
-                orderManagement.preparing_container.add(Box.createHorizontalStrut(5));
+                ORDER_MANAGEMENT.preparing_container.add(item);
+                ORDER_MANAGEMENT.preparing_container.add(Box.createHorizontalStrut(5));
 
-                orderManagement.preparing_container.revalidate();
-                orderManagement.preparing_container.repaint();
                 item.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
@@ -151,29 +149,31 @@ public class OrderManagement {
                 });
             }
         }
+        ORDER_MANAGEMENT.preparing_container.revalidate();
+        ORDER_MANAGEMENT.preparing_container.repaint();
     }
 
     public void addOrderDetails(OrderManagerDTO order) {
-        orderManagement.orderIdLable.setText(String.valueOf(order.getId()));
-        orderManagement.totalPriceLable.setText(String.valueOf(order.getTotal()));
-        orderManagement.orderStateLable.setText(String.valueOf(order.getState()));
+        ORDER_MANAGEMENT.orderIdLable.setText(String.valueOf(order.getId()));
+        ORDER_MANAGEMENT.totalPriceLable.setText(String.valueOf(order.getTotal()));
+        ORDER_MANAGEMENT.orderStateLable.setText(String.valueOf(order.getState()));
         List<FoodDTO> foods = order.getFood();
-        orderManagement.orderDetailsContainer.removeAll();
+        ORDER_MANAGEMENT.orderDetailsContainer.removeAll();
         if (!foods.isEmpty()) {
-            orderManagement.jLabel4.setVisible(true);
-            orderManagement.orderDetailsContainer.setLayout(new BoxLayout(orderManagement.orderDetailsContainer, BoxLayout.Y_AXIS));
+            ORDER_MANAGEMENT.jLabel4.setVisible(true);
+            ORDER_MANAGEMENT.orderDetailsContainer.setLayout(new BoxLayout(ORDER_MANAGEMENT.orderDetailsContainer, BoxLayout.Y_AXIS));
             ClickEffectManager orderDetailsCem = new ClickEffectManager(new Color(204, 204, 204), new Color(153, 153, 153));
             for (FoodDTO f : foods) {
                 FoodDetailsViewer detailsViewer = new FoodDetailsViewer(f, orderDetailsCem);
-                orderManagement.orderDetailsContainer.add(detailsViewer);
-                orderManagement.orderDetailsContainer.add(Box.createVerticalStrut(5));
+                ORDER_MANAGEMENT.orderDetailsContainer.add(detailsViewer);
+                ORDER_MANAGEMENT.orderDetailsContainer.add(Box.createVerticalStrut(5));
 
             }
         } else {
-            orderManagement.jLabel4.setVisible(false);
+            ORDER_MANAGEMENT.jLabel4.setVisible(false);
         }
-        orderManagement.orderDetailsContainer.revalidate();
-        orderManagement.orderDetailsContainer.repaint();
+        ORDER_MANAGEMENT.orderDetailsContainer.revalidate();
+        ORDER_MANAGEMENT.orderDetailsContainer.repaint();
     }
 
     public void loadOrderHistory() {
@@ -204,12 +204,12 @@ public class OrderManagement {
     }
 
     public void reset() {
-        orderManagement.orderIdLable.setText("None");
-        orderManagement.totalPriceLable.setText("0.00");
-        orderManagement.orderStateLable.setText("None");
-        orderManagement.orderDetailsContainer.removeAll();
-        orderManagement.jLabel4.setVisible(false);
-        orderManagement.orderDetailsContainer.revalidate();
-        orderManagement.orderDetailsContainer.repaint();
+        ORDER_MANAGEMENT.orderIdLable.setText("None");
+        ORDER_MANAGEMENT.totalPriceLable.setText("0.00");
+        ORDER_MANAGEMENT.orderStateLable.setText("None");
+        ORDER_MANAGEMENT.orderDetailsContainer.removeAll();
+        ORDER_MANAGEMENT.jLabel4.setVisible(false);
+        ORDER_MANAGEMENT.orderDetailsContainer.revalidate();
+        ORDER_MANAGEMENT.orderDetailsContainer.repaint();
     }
 }

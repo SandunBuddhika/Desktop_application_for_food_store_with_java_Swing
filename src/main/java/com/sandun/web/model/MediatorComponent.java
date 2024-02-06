@@ -2,7 +2,7 @@ package com.sandun.web.model;
 
 import javax.swing.JPanel;
 
-public class MediatorComponent extends JPanel{
+public abstract class MediatorComponent extends JPanel{
 
     protected ChatManager chatManager;
 

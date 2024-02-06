@@ -2,12 +2,7 @@ package com.sandun.web.template;
 
 import com.sandun.web.model.ClickEffectManager;
 import com.sandun.web.model.FontManager;
-import java.awt.Color;
 
-/**
- *
- * @author SANDUN BUDDHIKA
- */
 public class ChatOrderItem extends javax.swing.JPanel {
 
     private long invoiceId;

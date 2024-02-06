@@ -474,6 +474,7 @@ public class OrderFood extends javax.swing.JPanel {
     private void reset() {
         jPanel6.removeAll();
         currentFood = null;
+        order.clear();
         int size = dtm.getRowCount();
         for (int i = size - 1; i >= 0; i--) {
             dtm.removeRow(i);
