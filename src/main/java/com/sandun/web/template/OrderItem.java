@@ -3,6 +3,7 @@ package com.sandun.web.template;
 import com.sandun.web.dto.FoodDTO;
 import com.sandun.web.dto.OrderManagerDTO;
 import com.sandun.web.model.ClickEffectManager;
+import com.sandun.web.model.FontManager;
 import javax.swing.ImageIcon;
 
 /**
@@ -43,6 +44,7 @@ public class OrderItem extends MyPanelRound {
         String name = order.getFood().toString();
         jLabel5.setText(name.substring(1, name.length() - 1));
         jLabel7.setText(String.valueOf(order.getTotal()));
+        FontManager.setFontForLables(FontManager.outfitRegular, 12f, jLabel2, jLabel3, jLabel5, jLabel4, jLabel6, jLabel7);
     }
 
     public void switchImages() {

@@ -12,6 +12,7 @@ public class OrderManagement extends JPanel {
     public OrderManagement() {
         initComponents();
         setUp();
+        System.out.println("StartUp");
     }
 
     private void setUp() {
@@ -19,9 +20,11 @@ public class OrderManagement extends JPanel {
         this.orderManagement = new com.sandun.web.model.OrderManagement(this);
         jLabel1.setFont(FontManager.getOutfitMedium(24f));
         FontManager.setFontForLables(FontManager.outfitLight, 14f, jLabel2);
-        SwingUtilities.invokeLater(() -> orderManagement.loadHandilingOrders());
-        SwingUtilities.invokeLater(() -> orderManagement.loadOrders());
-        SwingUtilities.invokeLater(() -> orderManagement.loadOrderHistory());
+        new Thread(() -> {
+            orderManagement.loadHandilingOrders();
+            orderManagement.loadOrders();
+            orderManagement.loadOrderHistory();
+        }).start();
 
     }
 
@@ -387,7 +390,7 @@ public class OrderManagement extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-       orderManagement.handleTheOrder();
+        orderManagement.handleTheOrder();
     }//GEN-LAST:event_jButton4ActionPerformed
 
 

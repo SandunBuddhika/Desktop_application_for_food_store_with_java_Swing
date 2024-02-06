@@ -16,6 +16,7 @@ public class Home extends javax.swing.JPanel {
 
     private ChatOpenChecker isChatOpen;
     private ClickEffectManager cem;
+    private boolean isOrderEnable;
 
     public Home() {
         initComponents();
@@ -29,6 +30,7 @@ public class Home extends javax.swing.JPanel {
         System.out.println(homeMenuItem1.getBackground());
         if (SessionManager.getUSER().getType() == UserType.CUSTOMER) {
             homeMenuItem1.setVisible(false);
+            isOrderEnable = true;
         }
     }
 

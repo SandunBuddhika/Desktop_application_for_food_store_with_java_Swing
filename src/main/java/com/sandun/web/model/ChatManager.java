@@ -104,7 +104,6 @@ public class ChatManager {
             if (w > 350) {
                 w = 350;
             }
-            System.out.println(h);
             if (h < 70) {
                 h = 50;
             }

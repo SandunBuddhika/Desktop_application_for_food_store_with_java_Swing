@@ -18,7 +18,7 @@ import java.util.List;
 @NamedQueries({
     @NamedQuery(name = "getOrderhandlers", query = "select o from OrderManager o where o.order.user.id =:uId and o.state=:oState or o.handler.id =:uId and o.state=:oState"),
     @NamedQuery(name = "getAllOrders", query = "select distinct o from OrderManager o inner join fetch o.order.items where o.state=:oState"),
-    @NamedQuery(name = "getAllOrdershandlers", query = "select o from OrderManager o inner join fetch o.order inner join fetch o.order.items inner join fetch o.order.items.invoiceIngredients"),})
+    @NamedQuery(name = "getAllOrdershandlers", query = "select o from OrderManager o inner join fetch o.order.items where o.state=0"),})
 public class OrderManager {
 
     @Id

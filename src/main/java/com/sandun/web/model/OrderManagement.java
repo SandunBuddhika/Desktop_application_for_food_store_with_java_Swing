@@ -122,37 +122,34 @@ public class OrderManagement {
         orderManagement.preparing_container.removeAll();
         ClickEffectManager handilingOrdersCem = new ClickEffectManager(new Color(204, 204, 204), new Color(153, 153, 153));
         for (OrderManager o : orders) {
-            OrderManagerDTO.Builder b = new OrderManagerDTO.Builder().setId(o.getId()).setState(o.getState()).setInvoiceId(o.getOrder().getId()).setUserId(o.getHandler().getId()).setTotal(o.getOrder().getTotal());
-            List<FoodDTO> fList = new ArrayList<>();
-            for (InvoiceItem iItem : o.getOrder().getItems()) {
-                Food f = iItem.getFood();
-                Map<Long, ExtraIngredientDTO> extraIngredients = new HashMap<>();
-                for (ExtraIngredient xi : iItem.getInvoiceIngredients()) {
-                    extraIngredients.put(xi.getId(), new ExtraIngredientDTO.Builder().setId(xi.getId()).setName(xi.getName()).setPrice(xi.getPrice()).build());
+            if (o.getState() == OrderState.PREPARING) {
+                OrderManagerDTO.Builder b = new OrderManagerDTO.Builder().setId(o.getId()).setState(o.getState()).setInvoiceId(o.getOrder().getId()).setUserId(o.getHandler().getId()).setTotal(o.getOrder().getTotal());
+                List<FoodDTO> fList = new ArrayList<>();
+                for (InvoiceItem iItem : o.getOrder().getItems()) {
+                    Food f = iItem.getFood();
+                    Map<Long, ExtraIngredientDTO> extraIngredients = new HashMap<>();
+                    for (ExtraIngredient xi : iItem.getInvoiceIngredients()) {
+                        extraIngredients.put(xi.getId(), new ExtraIngredientDTO.Builder().setId(xi.getId()).setName(xi.getName()).setPrice(xi.getPrice()).build());
+                    }
+                    FoodDTO dto = new FoodDTO.Builder().setDescription(f.getDescription()).setPath(f.getImg()).setId(f.getId()).setPrice(f.getPrice()).setQty(iItem.getQty()).setName(f.getName()).setExtraIngredients(extraIngredients).build();
+                    fList.add(dto);
                 }
-                FoodDTO dto = new FoodDTO.Builder().setDescription(f.getDescription()).setPath(f.getImg()).setId(f.getId()).setPrice(f.getPrice()).setQty(iItem.getQty()).setName(f.getName()).setExtraIngredients(extraIngredients).build();
-                fList.add(dto);
-            }
-            b.setFood(fList);
+                b.setFood(fList);
+                OrderItem item = new OrderItem(b.build(), handilingOrdersCem);
+                orderManagement.preparing_container.add(item);
+                orderManagement.preparing_container.add(Box.createHorizontalStrut(5));
 
-            OrderItem item = new OrderItem(b.build(), handilingOrdersCem);
-            switch (o.getState()) {
-                case PREPARING: {
-                    orderManagement.preparing_container.add(item);
-                    orderManagement.preparing_container.add(Box.createHorizontalStrut(5));
-                    break;
-                }
+                orderManagement.preparing_container.revalidate();
+                orderManagement.preparing_container.repaint();
+                item.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        OrderManagerDTO omDto = item.getOrder();
+                        setCurrectOrder(omDto);
+                        addOrderDetails(omDto);
+                    }
+                });
             }
-            orderManagement.preparing_container.revalidate();
-            orderManagement.preparing_container.repaint();
-            item.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    OrderManagerDTO omDto = item.getOrder();
-                    setCurrectOrder(omDto);
-                    addOrderDetails(omDto);
-                }
-            });
         }
     }
 
@@ -170,6 +167,7 @@ public class OrderManagement {
                 FoodDetailsViewer detailsViewer = new FoodDetailsViewer(f, orderDetailsCem);
                 orderManagement.orderDetailsContainer.add(detailsViewer);
                 orderManagement.orderDetailsContainer.add(Box.createVerticalStrut(5));
+
             }
         } else {
             orderManagement.jLabel4.setVisible(false);
@@ -181,9 +179,7 @@ public class OrderManagement {
     public void loadOrderHistory() {
 
         List<OrderManager> oms = orderService.getAllOrders(OrderState.DELIVERED);
-        System.out.println(dtm.getRowCount());
         removeAllTableData();
-        System.out.println(dtm.getRowCount());
         int i = 1;
         for (OrderManager om : oms) {
             Vector<String> v = new Vector<>();
@@ -197,7 +193,6 @@ public class OrderManagement {
             v.add(fName.substring(0, fName.length() - 2));
             v.add(String.valueOf(String.valueOf(om.getOrder().getTotal())));
             dtm.addRow(v);
-            System.out.println("asdasdas");
         }
     }
 

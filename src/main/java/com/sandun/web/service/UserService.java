@@ -3,6 +3,7 @@ package com.sandun.web.service;
 import com.sandun.web.entities.User;
 import com.sandun.web.entities.enums.UserType;
 import com.sandun.web.utill.HibernateUtil;
+import java.util.Date;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -39,6 +40,7 @@ public class UserService {
             User u = new User();
             u.setType(UserType.CUSTOMER);
             u.setUsername(username);
+            u.setDate(new Date());
             session.persist(u);
             t.commit();
             return u;

@@ -30,7 +30,7 @@ public class InvoiceItem {
     private Food food;
     @Column(nullable = false)
     private Integer qty;
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     @JoinTable(name = "invoice_has_ingredient", joinColumns = @JoinColumn(name = "invoice_id"), inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     private Set<ExtraIngredient> invoiceIngredients = new HashSet<>();
     @ManyToOne

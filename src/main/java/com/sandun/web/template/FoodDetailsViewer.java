@@ -7,6 +7,8 @@ package com.sandun.web.template;
 import com.sandun.web.dto.ExtraIngredientDTO;
 import com.sandun.web.dto.FoodDTO;
 import com.sandun.web.model.ClickEffectManager;
+import com.sandun.web.model.FontManager;
+import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
@@ -53,6 +55,7 @@ public class FoodDetailsViewer extends MyPanelRound {
     }
 
     private void setUp() {
+        jPanel3.setBackground(new Color(0, 0, 0, 0));
         this.setRoundBottomLeft(20);
         this.setRoundBottomRight(20);
         this.setRoundTopRight(20);
@@ -77,6 +80,7 @@ public class FoodDetailsViewer extends MyPanelRound {
             totalLable.setText(String.valueOf(total * food.getQty()));
             jLabel2.setText(food.getName());
             foodPriceLable.setText(String.valueOf(food.getPrice()));
+            FontManager.setFontForLables(FontManager.outfitRegular, 12f, jLabel3, qtyLable, foodPriceLable, jLabel7, jLabel4, extrasLable, jLabel5, ExtraPriceLable, totalLable, jLabel6);
 
         }
     }
